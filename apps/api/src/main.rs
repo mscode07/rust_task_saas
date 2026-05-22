@@ -11,9 +11,18 @@ use sqlx::{
     postgres::PgPoolOptions,
     PgPool,
 };
+mod handlers;
+mod models;
+mod routes;
+mod utils;
+
+use routes::auth::auth_routes;
+
+use crate::handlers::auth;
+
 
 #[derive(Clone)]
-struct AppState{
+pub struct AppState{
     db:PgPool,
 }
 
@@ -46,7 +55,8 @@ async fn main()-> Result<()>{
     let state = AppState{db:pool};
 
     let app = Router::new()
-    .route("/health",get(health_handler))
+    .new("/health", get(health_handler))
+    .nest("api/v1/auth",auth_routes())
     .with_state(state);
 
     let addr = SocketAddr::from(([127,0,0,1],port));

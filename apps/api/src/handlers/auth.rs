@@ -15,7 +15,7 @@ use crate::{
 
 pub async fn register_handler(
     State(state):State<AppState>,
-    Json(payload):Json<RegisterRequst>
+    Json(payload):Json<RegisterRequest>
 ) -> Result<Json<AuthResponse>,StatusCode> {
     let password_hash = hash_password(&payload.password)
     .map_err(|_| StatusCode :: INTERNAL_SERVER_ERROR)?;
